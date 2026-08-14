@@ -50,24 +50,9 @@
 	font-weight: var(--font-medium);
 	text-transform: uppercase;
 	letter-spacing: 0.02em;
-}
-
-.tag-aggregator-badge-frontmatter {
-	background-color: var(--color-blue);
-	color: var(--text-on-accent);
-	opacity: 0.85;
-}
-
-.tag-aggregator-badge-heading {
-	background-color: var(--color-purple);
-	color: var(--text-on-accent);
-	opacity: 0.85;
-}
-
-.tag-aggregator-badge-inline {
-	background-color: var(--color-green);
-	color: var(--text-on-accent);
-	opacity: 0.85;
+	background-color: var(--background-primary);
+	color: var(--text-muted);
+	border: 1px solid var(--background-modifier-border);
 }
 
 .tag-aggregator-heading-context {
