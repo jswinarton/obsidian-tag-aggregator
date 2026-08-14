@@ -14,6 +14,11 @@ export interface AggregatorViewOptions {
 
 const DEFAULT_VIEW_OPTIONS: AggregatorViewOptions = { dividerStyle: "hr" };
 
+// Results taller than this get collapsed behind a "Show more" toggle rather than
+// truncated by character count, since content is rendered markdown (headings, lists,
+// embeds) where cutting mid-element would leave broken HTML.
+const COLLAPSE_HEIGHT_PX = 480;
+
 export class AggregatorView extends ItemView {
 	private tag: string;
 	private results: AggregatedResult[] = [];
@@ -119,11 +124,28 @@ export class AggregatorView extends ItemView {
 		}
 
 		const body = card.createDiv({ cls: "tag-aggregator-result-body" });
-		void MarkdownRenderer.render(this.app, result.content, body, result.filePath, this);
+		void MarkdownRenderer.render(this.app, result.content, body, result.filePath, this).then(() => {
+			this.setupTruncation(card, body);
+		});
 
 		if (showDivider && this.viewOptions.dividerStyle === "hr") {
 			container.createEl("hr", { cls: "tag-aggregator-divider" });
 		}
+	}
+
+	/** Collapses the body behind a fade + toggle button if the rendered content overflows COLLAPSE_HEIGHT_PX. */
+	private setupTruncation(card: HTMLElement, body: HTMLElement): void {
+		if (body.scrollHeight <= COLLAPSE_HEIGHT_PX) return;
+
+		body.addClass("is-collapsed");
+		const button = card.createEl("button", {
+			cls: "tag-aggregator-expand-btn",
+			text: "Show more",
+		});
+		button.addEventListener("click", () => {
+			body.toggleClass("is-collapsed", !body.hasClass("is-collapsed"));
+			button.setText(body.hasClass("is-collapsed") ? "Show more" : "Show less");
+		});
 	}
 
 	private async openSource(result: AggregatedResult): Promise<void> {
