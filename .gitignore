@@ -1,0 +1,18 @@
+node_modules/
+main.js
+*.js.map
+data.json
+
+# Isolated Electron profile for manually launching Obsidian against test-vault/
+# (keeps it out of your real ~/.config/obsidian entirely)
+.obsidian-dev-profile/
+
+# Obsidian test vault workspace/cache state (not the plugin symlink or fixture notes)
+test-vault/.obsidian/workspace.json
+test-vault/.obsidian/workspace-mobile.json
+test-vault/.obsidian/cache/
+test-vault/.obsidian/plugins/tag-aggregator/main.js
+test-vault/.obsidian/plugins/tag-aggregator/main.js.map
+test-vault/.obsidian/plugins/tag-aggregator/data.json
+
+.DS_Store

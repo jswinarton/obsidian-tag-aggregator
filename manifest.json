@@ -1,0 +1,10 @@
+{
+	"id": "tag-aggregator",
+	"name": "Tag Aggregator",
+	"version": "0.1.0",
+	"minAppVersion": "1.4.0",
+	"description": "Aggregate all content associated with a tag into a single ephemeral, read-only view.",
+	"author": "Jeremy Swinarton",
+	"authorUrl": "",
+	"isDesktopOnly": false
+}
