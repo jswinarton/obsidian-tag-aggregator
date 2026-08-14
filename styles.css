@@ -67,6 +67,17 @@
 	margin-top: 0;
 }
 
+/* The heading breadcrumb in the card header already shows this text, so
+   hide the redundant, oversized heading element the rendered markdown
+   would otherwise repeat at the top of the body. */
+.tag-aggregator-hide-first-heading > :first-child:is(h1, h2, h3, h4, h5, h6) {
+	display: none;
+}
+
+.tag-aggregator-hide-first-heading > :first-child:is(h1, h2, h3, h4, h5, h6) + * {
+	margin-top: 0;
+}
+
 .tag-aggregator-result-body :last-child {
 	margin-bottom: 0;
 }

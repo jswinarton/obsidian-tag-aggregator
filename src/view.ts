@@ -14,6 +14,18 @@ export interface AggregatorViewOptions {
 
 const DEFAULT_VIEW_OPTIONS: AggregatorViewOptions = { dividerStyle: "hr" };
 
+/**
+ * Strips a literal "#tag" occurrence out of heading text before it's shown in the
+ * breadcrumb label, since that's the same tag this whole view is aggregating on and
+ * repeating it there is redundant. Leaves nested occurrences (e.g. "#tag/sub") alone --
+ * those carry information the plain tag name doesn't.
+ */
+function stripTagFromHeading(headingText: string, tag: string): string {
+	const escaped = tag.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+	const pattern = new RegExp(`#${escaped}(?=[^\\w/]|$)`, "gi");
+	return headingText.replace(pattern, "").replace(/\s{2,}/g, " ").trim();
+}
+
 // Results taller than this get collapsed behind a "Show more" toggle rather than
 // truncated by character count, since content is rendered markdown (headings, lists,
 // embeds) where cutting mid-element would leave broken HTML.
@@ -119,11 +131,13 @@ export class AggregatorView extends ItemView {
 			text: CATEGORY_LABELS[result.category],
 		});
 
-		if (result.headingText) {
-			header.createSpan({ cls: "tag-aggregator-heading-context", text: result.headingText });
+		const headingContext = result.headingText && stripTagFromHeading(result.headingText, this.tag);
+		if (headingContext) {
+			header.createSpan({ cls: "tag-aggregator-heading-context", text: headingContext });
 		}
 
 		const body = card.createDiv({ cls: "tag-aggregator-result-body" });
+		if (result.category === "heading") body.addClass("tag-aggregator-hide-first-heading");
 		void MarkdownRenderer.render(this.app, result.content, body, result.filePath, this).then(() => {
 			this.setupTruncation(card, body);
 		});
