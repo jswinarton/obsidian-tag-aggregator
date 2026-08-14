@@ -1,8 +1,8 @@
 export type SortStrategy<T> = (a: T, b: T) => number;
 
 export interface SortableResult {
-	filePath: string;
+	fileBasename: string;
 }
 
 export const sortByFileNameDescending: SortStrategy<SortableResult> = (a, b) =>
-	b.filePath.localeCompare(a.filePath);
+	b.fileBasename.localeCompare(a.fileBasename);
