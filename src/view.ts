@@ -162,15 +162,24 @@ export class AggregatorView extends ItemView {
 		});
 	}
 
+	/**
+	 * Jumps straight to result.startLine rather than building a "path#heading" linktext:
+	 * heading-category results always have the tag itself on the heading line (that's
+	 * what makes them heading-category), so the heading text always contains a second
+	 * "#", which breaks Obsidian's link subpath resolution and silently falls back to
+	 * opening the top of the file. Using the line number sidesteps that entirely, and
+	 * also gets inline-category results to the exact tagged line instead of just the
+	 * nearest heading above it.
+	 */
 	private async openSource(result: AggregatedResult): Promise<void> {
 		const file = this.app.vault.getAbstractFileByPath(result.filePath);
 		if (!(file instanceof TFile)) {
 			new Notice("Source note no longer exists.");
 			return;
 		}
-		const linktext = result.headingText ? `${result.filePath}#${result.headingText}` : result.filePath;
 		try {
-			await this.app.workspace.openLinkText(linktext, "", false);
+			const leaf = this.app.workspace.getLeaf(false);
+			await leaf.openFile(file, { eState: { line: result.startLine } });
 		} catch {
 			new Notice("Could not open source note.");
 		}
